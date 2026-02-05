@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
+const { BASE_URL } = import.meta.env;
+const blogUrl = (BASE_URL.endsWith('/') ? BASE_URL : BASE_URL + '/') + 'blog';
 ---
 
 <Layout>
@@ -14,7 +16,7 @@ import Layout from '../layouts/Layout.astro';
             </p>
             <div class="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
                 <div class="rounded-md shadow">
-                    <a href="/blog" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10 transition-colors">
+                    <a href={blogUrl} class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10 transition-colors">
                         Read Blog
                     </a>
                 </div>

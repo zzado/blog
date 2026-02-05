@@ -2,6 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
+const { BASE_URL } = import.meta.env;
+const homeUrl = BASE_URL.endsWith('/') ? BASE_URL : BASE_URL + '/';
+
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
@@ -14,9 +17,9 @@ const posts = (await getCollection('blog')).sort(
 			{
 				posts.map((post) => (
 					<article class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow overflow-hidden">
-						<a href={`/blog/${post.slug}`} class="block">
+						<a href={`${homeUrl}blog/${post.slug}`} class="block">
 							{post.data.heroImage && (
-								<img width={720} height={360} src={post.data.heroImage} alt="" class="w-full h-48 object-cover" />
+								<img width={720} height={360} src={post.data.heroImage.startsWith('/') ? homeUrl + post.data.heroImage.substring(1) : post.data.heroImage} alt="" class="w-full h-48 object-cover" />
 							)}
 							<div class="p-6">
 								<h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400">

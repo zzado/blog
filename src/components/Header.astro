@@ -1,19 +1,24 @@
 ---
+const { BASE_URL } = import.meta.env;
+// Ensure BASE_URL doesn't double slash if it ends with /
+const homeUrl = BASE_URL.endsWith('/') ? BASE_URL : BASE_URL + '/';
+const blogUrl = homeUrl + 'blog';
+const aboutUrl = homeUrl + 'about';
 ---
 <header class="sticky top-0 z-50 w-full backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800 transition-colors duration-300">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
       <!-- Logo -->
       <div class="flex-shrink-0">
-        <a href="/" class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
+        <a href={homeUrl} class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
           Zzado.dev
         </a>
       </div>
 
       <!-- Navigation (Desktop) -->
       <nav class="hidden md:flex space-x-8">
-        <a href="/blog" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Blog</a>
-        <a href="/about" class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">About</a>
+        <a href={blogUrl} class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Blog</a>
+        <a href={aboutUrl} class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">About</a>
       </nav>
 
       <!-- Theme Toggle Button -->

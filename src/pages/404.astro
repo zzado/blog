@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
+const { BASE_URL } = import.meta.env;
+const homeUrl = BASE_URL.endsWith('/') ? BASE_URL : BASE_URL + '/';
 ---
 
 <Layout>
@@ -11,7 +13,7 @@ import Layout from '../layouts/Layout.astro';
 		<p class="mt-4 text-gray-500 dark:text-gray-400">
 			We can't find that page.
 		</p>
-		<a href="/" class="mt-6 inline-flex items-center rounded-md bg-blue-600 px-5 py-3 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors">
+		<a href={homeUrl} class="mt-6 inline-flex items-center rounded-md bg-blue-600 px-5 py-3 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors">
 			Go back home
 		</a>
 	</div>
