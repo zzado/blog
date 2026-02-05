@@ -9,7 +9,6 @@ const t = useTranslations(lang);
 const { BASE_URL } = import.meta.env;
 const homeUrl = BASE_URL.endsWith('/') ? BASE_URL : BASE_URL + '/';
 
-// Fetch only Korean posts
 const allPosts = await getCollection('blog');
 const posts = allPosts
     .filter(post => post.id.startsWith('ko/'))
@@ -18,14 +17,24 @@ const posts = allPosts
 
 <Layout>
 	<div class="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-		<h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">{t('posts.title')}</h1>
-		<div class="grid gap-8 md:grid-cols-2">
+		<div class="flex justify-between items-center mb-8">
+			<h1 class="text-3xl font-bold text-gray-900 dark:text-white">{t('posts.title')}</h1>
+			<!-- View Toggle Button -->
+			<button id="view-toggle" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none hidden md:block" title="Toggle View">
+				<!-- Grid Icon (Default) -->
+				<svg id="icon-grid" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+				<!-- List Icon -->
+				<svg id="icon-list" class="hidden w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+			</button>
+		</div>
+
+		<div id="posts-container" class="grid gap-8 md:grid-cols-2">
 			{
 				posts.map((post) => (
-					<article class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow overflow-hidden">
-						<a href={`${homeUrl}posts/${post.slug.replace(/^ko\//, '')}`} class="block">
+					<article class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow overflow-hidden group">
+						<a href={`${homeUrl}posts/${post.slug.replace(/^ko\//, '')}`} class="block h-full">
 							{post.data.heroImage && (
-								<img width={720} height={360} src={post.data.heroImage.startsWith('/') ? homeUrl + post.data.heroImage.substring(1) : post.data.heroImage} alt="" class="w-full h-48 object-cover" />
+								<img width={720} height={360} src={post.data.heroImage.startsWith('/') ? homeUrl + post.data.heroImage.substring(1) : post.data.heroImage} alt="" class="w-full h-48 object-cover card-image transition-all duration-300" />
 							)}
 							<div class="p-6">
 								<h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400">
@@ -34,7 +43,7 @@ const posts = allPosts
 								<p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
                                     {post.data.pubDate.toLocaleDateString('ko-KR')}
 								</p>
-                                <p class="text-gray-600 dark:text-gray-300 line-clamp-3">
+                                <p class="text-gray-600 dark:text-gray-300 line-clamp-3 card-desc">
                                     {post.data.description}
                                 </p>
 							</div>
@@ -50,3 +59,55 @@ const posts = allPosts
 		</div>
 	</div>
 </Layout>
+
+<script is:inline>
+    function setupViewToggle() {
+        const toggleBtn = document.getElementById('view-toggle');
+        const container = document.getElementById('posts-container');
+        const iconGrid = document.getElementById('icon-grid');
+        const iconList = document.getElementById('icon-list');
+        const images = document.querySelectorAll('.card-image');
+        const descs = document.querySelectorAll('.card-desc');
+
+        // Check local storage for preference
+        let isListView = localStorage.getItem('posts-view') === 'list';
+
+        function updateView() {
+            if (isListView) {
+                // List View Styles
+                container.classList.remove('md:grid-cols-2');
+                container.classList.add('grid-cols-1');
+                
+                // Hide images in list view for compactness (optional, or make them small on left)
+                // For this simple implementation, let's keep it simple: stacked list
+                iconGrid.classList.add('hidden');
+                iconList.classList.remove('hidden');
+            } else {
+                // Grid View Styles
+                container.classList.add('md:grid-cols-2');
+                container.classList.remove('grid-cols-1');
+                
+                iconGrid.classList.remove('hidden');
+                iconList.classList.add('hidden');
+            }
+        }
+
+        // Initialize
+        updateView();
+
+        if (toggleBtn) {
+            // Remove old listener
+            const newBtn = toggleBtn.cloneNode(true);
+            toggleBtn.parentNode.replaceChild(newBtn, toggleBtn);
+
+            newBtn.addEventListener('click', () => {
+                isListView = !isListView;
+                localStorage.setItem('posts-view', isListView ? 'list' : 'grid');
+                updateView();
+            });
+        }
+    }
+
+    document.addEventListener('astro:page-load', setupViewToggle);
+    setupViewToggle();
+</script>
