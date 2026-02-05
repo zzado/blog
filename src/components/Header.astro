@@ -1,8 +1,36 @@
 ---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
 const { BASE_URL } = import.meta.env;
 const homeUrl = BASE_URL.endsWith('/') ? BASE_URL : BASE_URL + '/';
-const blogUrl = homeUrl + 'posts';
-const aboutUrl = homeUrl + 'about';
+
+// Dynamic links based on current language
+// Explicitly include 'ko/' for Korean to match file structure
+const currentLangPrefix = lang + '/';
+const postsUrl = homeUrl + currentLangPrefix + 'posts';
+const aboutUrl = homeUrl + currentLangPrefix + 'about';
+
+// Language Switcher Logic
+const currentPath = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
+let toggleLangUrl = '';
+
+// Calculate Toggle URL based on strict /ko/ or /en/ structure
+// If current is /ko/..., swap to /en/... and vice versa
+if (currentPath.startsWith('/ko/') || currentPath === '/ko') {
+    // Switch to EN
+    const path = currentPath.replace(/^\/ko/, '');
+    toggleLangUrl = homeUrl + 'en' + path;
+} else if (currentPath.startsWith('/en/') || currentPath === '/en') {
+    // Switch to KO
+    const path = currentPath.replace(/^\/en/, '');
+    toggleLangUrl = homeUrl + 'ko' + path;
+} else {
+    // Fallback for root (should be redirected anyway)
+    toggleLangUrl = homeUrl + 'en/';
+}
 ---
 
 <header class="sticky top-0 z-50 w-full backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800 transition-colors duration-300">
@@ -17,8 +45,8 @@ const aboutUrl = homeUrl + 'about';
 
       <!-- Navigation (Desktop) -->
       <nav class="hidden md:flex space-x-8">
-        <a href={blogUrl} class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Posts</a>
-        <a href={aboutUrl} class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">About</a>
+        <a href={postsUrl} class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t('nav.posts')}</a>
+        <a href={aboutUrl} class="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t('nav.about')}</a>
       </nav>
 
       <!-- Right Side Actions -->
@@ -48,8 +76,12 @@ const aboutUrl = homeUrl + 'about';
   <!-- Mobile Menu (Dropdown) -->
   <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200 dark:border-gray-700">
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-      <a href={blogUrl} class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800">Posts</a>
-      <a href={aboutUrl} class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800">About</a>
+      <a href={postsUrl} class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800">{t('nav.posts')}</a>
+      <a href={aboutUrl} class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800">{t('nav.about')}</a>
+      <!-- Mobile Language Toggle -->
+      <a href={toggleLangUrl} class="block px-3 py-2 rounded-md text-base font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800">
+        {lang === 'ko' ? '🇺🇸 Switch to English' : '🇰🇷 한국어로 변경'}
+      </a>
     </div>
   </div>
 </header>
