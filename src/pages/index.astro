@@ -1,26 +1,6 @@
 ---
-import Layout from '../layouts/Layout.astro';
 const { BASE_URL } = import.meta.env;
-const blogUrl = (BASE_URL.endsWith('/') ? BASE_URL : BASE_URL + '/') + 'posts';
+const homeUrl = BASE_URL.endsWith('/') ? BASE_URL : BASE_URL + '/';
+// Redirect root to Korean posts list
+return Astro.redirect(homeUrl + 'ko/posts/');
 ---
-
-<Layout>
-	<div class="max-w-4xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
-        <div class="text-center">
-            <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
-                <span class="block">Welcome to</span>
-                <span class="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Zzado's Dev Blog</span>
-            </h1>
-            <p class="mt-3 max-w-md mx-auto text-base text-gray-500 dark:text-gray-400 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-                Sharing thoughts, code, and developer life. Built with Astro 5.0 and Tailwind 4.0.
-            </p>
-            <div class="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
-                <div class="rounded-md shadow">
-                    <a href={blogUrl} class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10 transition-colors">
-                        Read Blog
-                    </a>
-                </div>
-            </div>
-        </div>
-	</div>
-</Layout>
