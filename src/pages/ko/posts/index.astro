@@ -19,19 +19,28 @@ const posts = allPosts
 	<div class="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
 		<div class="flex justify-between items-center mb-8">
 			<h1 class="text-3xl font-bold text-gray-900 dark:text-white">{t('posts.title')}</h1>
-			<!-- View Toggle Button -->
-			<button id="view-toggle" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none hidden md:block" title="Toggle View">
-				<!-- Grid Icon (Default) -->
-				<svg id="icon-grid" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-				<!-- List Icon -->
-				<svg id="icon-list" class="hidden w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-			</button>
+            
+            <div class="flex items-center gap-4">
+                <!-- Search Input -->
+                <div class="relative">
+                    <input type="text" id="search-input" placeholder={t('posts.search_placeholder')} class="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white" />
+                    <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+
+                <!-- View Toggle Button -->
+                <button id="view-toggle" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none hidden md:block" title="Toggle View">
+                    <!-- Grid Icon (Show when in List View) -->
+                    <svg id="icon-grid" class="hidden w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    <!-- List Icon (Show when in Grid View) -->
+                    <svg id="icon-list" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
 		</div>
 
 		<div id="posts-container" class="grid gap-8 md:grid-cols-2">
 			{
 				posts.map((post) => (
-					<article class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow overflow-hidden group">
+					<article class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow overflow-hidden group post-item" data-title={post.data.title.toLowerCase()} data-desc={post.data.description.toLowerCase()} data-tags={post.data.tags.join(',').toLowerCase()}>
 						<a href={`${homeUrl}posts/${post.slug.replace(/^ko\//, '')}`} class="block h-full card-link">
 							{post.data.heroImage && (
 								<img width={720} height={360} src={post.data.heroImage.startsWith('/') ? homeUrl + post.data.heroImage.substring(1) : post.data.heroImage} alt="" class="w-full h-48 object-cover card-image transition-all duration-300" />
@@ -43,9 +52,14 @@ const posts = allPosts
 								<p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
                                     {post.data.pubDate.toLocaleDateString('ko-KR')}
 								</p>
-                                <p class="text-gray-600 dark:text-gray-300 line-clamp-3 card-desc">
+                                <p class="text-gray-600 dark:text-gray-300 line-clamp-3 card-desc mb-4">
                                     {post.data.description}
                                 </p>
+                                <div class="flex flex-wrap gap-2">
+                                    {post.data.tags.map(tag => (
+                                        <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded-full">#{tag}</span>
+                                    ))}
+                                </div>
 							</div>
 						</a>
 					</article>
@@ -69,6 +83,8 @@ const posts = allPosts
         const cardLinks = document.querySelectorAll('.card-link');
         const images = document.querySelectorAll('.card-image');
         const contents = document.querySelectorAll('.card-content');
+        const searchInput = document.getElementById('search-input');
+        const postItems = document.querySelectorAll('.post-item');
 
         // Check local storage for preference
         let isListView = localStorage.getItem('posts-view') === 'list';
@@ -96,8 +112,8 @@ const posts = allPosts
                     content.classList.add('flex-1'); // Take remaining space
                 });
 
-                iconGrid.classList.add('hidden');
-                iconList.classList.remove('hidden');
+                iconGrid.classList.remove('hidden');
+                iconList.classList.add('hidden');
             } else {
                 // Grid View Styles
                 container.classList.add('md:grid-cols-2');
@@ -119,9 +135,31 @@ const posts = allPosts
                     content.classList.remove('flex-1');
                 });
                 
-                iconGrid.classList.remove('hidden');
-                iconList.classList.add('hidden');
+                iconGrid.classList.add('hidden');
+                iconList.classList.remove('hidden');
             }
+        }
+
+        // Search Functionality
+        if (searchInput) {
+            const newSearchInput = searchInput.cloneNode(true);
+            searchInput.parentNode.replaceChild(newSearchInput, searchInput);
+
+            newSearchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                
+                postItems.forEach(item => {
+                    const title = item.dataset.title;
+                    const desc = item.dataset.desc;
+                    const tags = item.dataset.tags;
+
+                    if (title.includes(term) || desc.includes(term) || tags.includes(term)) {
+                        item.classList.remove('hidden');
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+            });
         }
 
         // Initialize
