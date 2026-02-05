@@ -30,11 +30,11 @@ const posts = allPosts
 			{
 				posts.map((post) => (
 					<article class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow overflow-hidden group">
-						<a href={`${homeUrl}en/posts/${post.slug.replace(/^en\//, '')}`} class="block h-full">
+						<a href={`${homeUrl}en/posts/${post.slug.replace(/^en\//, '')}`} class="block h-full card-link">
 							{post.data.heroImage && (
 								<img width={720} height={360} src={post.data.heroImage.startsWith('/') ? homeUrl + post.data.heroImage.substring(1) : post.data.heroImage} alt="" class="w-full h-48 object-cover card-image transition-all duration-300" />
 							)}
-							<div class="p-6">
+							<div class="p-6 card-content">
 								<h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400">
 									{post.data.title}
 								</h2>
@@ -64,6 +64,9 @@ const posts = allPosts
         const container = document.getElementById('posts-container');
         const iconGrid = document.getElementById('icon-grid');
         const iconList = document.getElementById('icon-list');
+        const cardLinks = document.querySelectorAll('.card-link');
+        const images = document.querySelectorAll('.card-image');
+        const contents = document.querySelectorAll('.card-content');
 
         let isListView = localStorage.getItem('posts-view') === 'list';
 
@@ -71,11 +74,41 @@ const posts = allPosts
             if (isListView) {
                 container.classList.remove('md:grid-cols-2');
                 container.classList.add('grid-cols-1');
+                
+                cardLinks.forEach(link => {
+                    link.classList.add('flex', 'flex-row');
+                    link.classList.remove('block');
+                });
+
+                images.forEach(img => {
+                    img.classList.remove('w-full', 'h-48');
+                    img.classList.add('w-48', 'h-auto', 'min-h-full');
+                });
+
+                contents.forEach(content => {
+                    content.classList.add('flex-1');
+                });
+
                 iconGrid.classList.add('hidden');
                 iconList.classList.remove('hidden');
             } else {
                 container.classList.add('md:grid-cols-2');
                 container.classList.remove('grid-cols-1');
+                
+                cardLinks.forEach(link => {
+                    link.classList.remove('flex', 'flex-row');
+                    link.classList.add('block');
+                });
+
+                images.forEach(img => {
+                    img.classList.add('w-full', 'h-48');
+                    img.classList.remove('w-48', 'h-auto', 'min-h-full');
+                });
+
+                contents.forEach(content => {
+                    content.classList.remove('flex-1');
+                });
+
                 iconGrid.classList.remove('hidden');
                 iconList.classList.add('hidden');
             }
