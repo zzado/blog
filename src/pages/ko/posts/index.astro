@@ -41,10 +41,10 @@ const posts = allPosts
             </div>
 		</div>
 
-		<div id="posts-container" class="grid gap-8 md:grid-cols-2">
+		<div id="posts-container" class="grid gap-8 md:grid-cols-2 transition-all duration-300 ease-in-out">
 			{
 				posts.map((post) => (
-					<article class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow overflow-hidden group post-item" data-title={post.data.title.toLowerCase()} data-desc={post.data.description.toLowerCase()} data-tags={post.data.tags.join(',').toLowerCase()}>
+					<article class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow overflow-hidden group post-item transition-all duration-300 ease-in-out" data-title={post.data.title.toLowerCase()} data-desc={post.data.description.toLowerCase()} data-tags={post.data.tags.join(',').toLowerCase()}>
 						<a href={`${homeUrl}ko/posts/${post.slug.replace(/^ko\//, '')}`} class="block h-full card-link">
 							{post.data.heroImage && (
 								<img width={720} height={360} src={post.data.heroImage.startsWith('/') ? homeUrl + post.data.heroImage.substring(1) : post.data.heroImage} alt="" class="w-full h-48 object-cover card-image transition-all duration-300" />
@@ -61,7 +61,7 @@ const posts = allPosts
                                 </p>
                                 <div class="flex flex-wrap gap-2">
                                     {post.data.tags.map(tag => (
-                                        <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded-full">#{tag}</span>
+                                        <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded-full cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors post-tag">#{tag}</span>
                                     ))}
                                 </div>
 							</div>
@@ -74,6 +74,12 @@ const posts = allPosts
                     {t('posts.empty')}
                 </p>
             )}
+            
+            <!-- No Search Results Message -->
+            <div id="no-results" class="hidden col-span-2 text-center py-10">
+                <p class="text-lg text-gray-500 dark:text-gray-400">검색 결과가 없습니다. 😅</p>
+                <button id="clear-search" class="mt-2 text-blue-500 hover:underline text-sm">검색어 초기화</button>
+            </div>
 		</div>
 	</div>
 </Layout>
@@ -83,6 +89,8 @@ const posts = allPosts
         const container = document.getElementById('posts-container');
         const searchInput = document.getElementById('search-input');
         const postItems = document.querySelectorAll('.post-item');
+        const noResults = document.getElementById('no-results');
+        const clearSearchBtn = document.getElementById('clear-search');
 
         // Check local storage for preference
         let isListView = localStorage.getItem('posts-view') === 'list';
@@ -92,13 +100,11 @@ const posts = allPosts
         const inactiveClass = ['text-gray-400', 'dark:text-gray-500', 'hover:bg-gray-100', 'dark:hover:bg-gray-700'];
 
         function updateButtonStyles() {
-            // Always get fresh references from DOM
             const btnListEl = document.getElementById('btn-list');
             const btnGridEl = document.getElementById('btn-grid');
             
             if (!btnListEl || !btnGridEl) return;
 
-            // Remove all classes first
             [...activeClass, ...inactiveClass].forEach(cls => {
                 btnListEl.classList.remove(cls);
                 btnGridEl.classList.remove(cls);
@@ -118,7 +124,6 @@ const posts = allPosts
             const images = document.querySelectorAll('.card-image');
             const contents = document.querySelectorAll('.card-content');
             const descs = document.querySelectorAll('.card-desc');
-            const articles = document.querySelectorAll('.post-item');
 
             if (isListView) {
                 // List View Styles - Compact
@@ -141,7 +146,6 @@ const posts = allPosts
                     content.classList.add('p-3');
                 });
 
-                // Hide description in list view
                 descs.forEach(desc => {
                     desc.classList.add('hidden');
                 });
@@ -165,7 +169,6 @@ const posts = allPosts
                     content.classList.add('p-6');
                 });
 
-                // Show description in grid view
                 descs.forEach(desc => {
                     desc.classList.remove('hidden');
                 });
@@ -177,6 +180,7 @@ const posts = allPosts
         if (searchInput) {
             searchInput.addEventListener('input', (e) => {
                 const term = e.target.value.toLowerCase();
+                let visibleCount = 0;
                 
                 postItems.forEach(item => {
                     const title = item.dataset.title;
@@ -185,17 +189,34 @@ const posts = allPosts
 
                     if (title.includes(term) || desc.includes(term) || tags.includes(term)) {
                         item.classList.remove('hidden');
+                        visibleCount++;
                     } else {
                         item.classList.add('hidden');
                     }
                 });
+
+                if (visibleCount === 0 && term.length > 0) {
+                    noResults.classList.remove('hidden');
+                } else {
+                    noResults.classList.add('hidden');
+                }
             });
         }
 
-        // Button click handlers using event delegation
+        // Clear Search
+        if (clearSearchBtn && searchInput) {
+            clearSearchBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                searchInput.dispatchEvent(new Event('input'));
+                searchInput.focus();
+            });
+        }
+
+        // Event Delegation for View Toggle & Tags
         document.addEventListener('click', (e) => {
             const btnList = e.target.closest('#btn-list');
             const btnGrid = e.target.closest('#btn-grid');
+            const tagBtn = e.target.closest('.post-tag');
 
             if (btnList) {
                 isListView = true;
@@ -205,6 +226,16 @@ const posts = allPosts
                 isListView = false;
                 localStorage.setItem('posts-view', 'grid');
                 updateView();
+            } else if (tagBtn) {
+                // Tag filtering logic
+                e.preventDefault(); // Prevent link click if wrapped in <a>
+                const tagText = tagBtn.innerText.replace('#', '').toLowerCase();
+                if (searchInput) {
+                    searchInput.value = tagText;
+                    searchInput.dispatchEvent(new Event('input'));
+                    // Scroll to top to see results
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
             }
         });
 
