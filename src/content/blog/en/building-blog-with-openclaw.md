@@ -1,5 +1,5 @@
 ---
-title: 'Building My Blog with AI - OpenClaw + Astro Journey'
+title: 'Building an Astro Blog (feat. OpenClaw)'
 description: 'A complete walkthrough of building an Astro blog from scratch using OpenClaw and Claude Opus.'
 pubDate: '2026-02-06'
 heroImage: '/images/astro-openclaw-hero.png'
