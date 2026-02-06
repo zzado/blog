@@ -27,13 +27,17 @@ const posts = allPosts
                     <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
 
-                <!-- View Toggle Button -->
-                <button id="view-toggle" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none hidden md:block" title="Toggle View">
-                    <!-- Grid Icon (Show when in Grid View) -->
-                    <svg id="icon-grid" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-                    <!-- List Icon (Show when in List View) -->
-                    <svg id="icon-list" class="hidden w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                </button>
+                <!-- View Toggle Buttons -->
+                <div class="hidden md:flex items-center gap-1 border border-gray-300 dark:border-gray-600 rounded-lg p-1">
+                    <!-- List Icon Button -->
+                    <button id="btn-list" class="p-1.5 rounded transition-colors" title="List View">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <!-- Grid Icon Button -->
+                    <button id="btn-grid" class="p-1.5 rounded transition-colors" title="Grid View">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    </button>
+                </div>
             </div>
 		</div>
 
@@ -76,76 +80,102 @@ const posts = allPosts
 
 <script is:inline>
     function setupViewToggle() {
-        const toggleBtn = document.getElementById('view-toggle');
         const container = document.getElementById('posts-container');
-        const iconGrid = document.getElementById('icon-grid');
-        const iconList = document.getElementById('icon-list');
-        const cardLinks = document.querySelectorAll('.card-link');
-        const images = document.querySelectorAll('.card-image');
-        const contents = document.querySelectorAll('.card-content');
         const searchInput = document.getElementById('search-input');
         const postItems = document.querySelectorAll('.post-item');
 
         // Check local storage for preference
         let isListView = localStorage.getItem('posts-view') === 'list';
 
-        function updateView() {
+        // Active/Inactive styles
+        const activeClass = ['bg-gray-600', 'dark:bg-gray-500', 'text-white'];
+        const inactiveClass = ['text-gray-400', 'dark:text-gray-500', 'hover:bg-gray-100', 'dark:hover:bg-gray-700'];
+
+        function updateButtonStyles() {
+            // Always get fresh references from DOM
+            const btnListEl = document.getElementById('btn-list');
+            const btnGridEl = document.getElementById('btn-grid');
+            
+            if (!btnListEl || !btnGridEl) return;
+
+            // Remove all classes first
+            [...activeClass, ...inactiveClass].forEach(cls => {
+                btnListEl.classList.remove(cls);
+                btnGridEl.classList.remove(cls);
+            });
+
             if (isListView) {
-                // List View Styles
-                container.classList.remove('md:grid-cols-2');
-                container.classList.add('grid-cols-1');
+                btnListEl.classList.add(...activeClass);
+                btnGridEl.classList.add(...inactiveClass);
+            } else {
+                btnGridEl.classList.add(...activeClass);
+                btnListEl.classList.add(...inactiveClass);
+            }
+        }
+
+        function updateView() {
+            const cardLinks = document.querySelectorAll('.card-link');
+            const images = document.querySelectorAll('.card-image');
+            const contents = document.querySelectorAll('.card-content');
+            const descs = document.querySelectorAll('.card-desc');
+            const articles = document.querySelectorAll('.post-item');
+
+            if (isListView) {
+                // List View Styles - Compact
+                container.classList.remove('md:grid-cols-2', 'gap-8');
+                container.classList.add('grid-cols-1', 'gap-3');
                 
-                // Switch to Flex Row for List View
                 cardLinks.forEach(link => {
-                    link.classList.add('flex', 'flex-row');
+                    link.classList.add('flex', 'flex-row', 'items-center');
                     link.classList.remove('block');
                 });
 
-                // Adjust Image Style for List View
                 images.forEach(img => {
                     img.classList.remove('w-full', 'h-48');
-                    img.classList.add('w-48', 'h-auto', 'min-h-full'); // Fixed width, auto height
+                    img.classList.add('w-32', 'h-full', 'object-cover', 'flex-shrink-0');
                 });
 
-                // Adjust Content Padding if needed
                 contents.forEach(content => {
-                    content.classList.add('flex-1'); // Take remaining space
+                    content.classList.add('flex-1');
+                    content.classList.remove('p-6');
+                    content.classList.add('p-3');
                 });
 
-                iconGrid.classList.add('hidden');
-                iconList.classList.remove('hidden');
+                // Hide description in list view
+                descs.forEach(desc => {
+                    desc.classList.add('hidden');
+                });
             } else {
                 // Grid View Styles
-                container.classList.add('md:grid-cols-2');
-                container.classList.remove('grid-cols-1');
+                container.classList.add('md:grid-cols-2', 'gap-8');
+                container.classList.remove('grid-cols-1', 'gap-3');
                 
-                // Revert to Block for Grid View
                 cardLinks.forEach(link => {
-                    link.classList.remove('flex', 'flex-row');
+                    link.classList.remove('flex', 'flex-row', 'items-center');
                     link.classList.add('block');
                 });
 
-                // Revert Image Style
                 images.forEach(img => {
                     img.classList.add('w-full', 'h-48');
-                    img.classList.remove('w-48', 'h-auto', 'min-h-full');
+                    img.classList.remove('w-32', 'h-full', 'flex-shrink-0');
                 });
 
                 contents.forEach(content => {
-                    content.classList.remove('flex-1');
+                    content.classList.remove('flex-1', 'p-3');
+                    content.classList.add('p-6');
                 });
-                
-                iconGrid.classList.remove('hidden');
-                iconList.classList.add('hidden');
+
+                // Show description in grid view
+                descs.forEach(desc => {
+                    desc.classList.remove('hidden');
+                });
             }
+            updateButtonStyles();
         }
 
         // Search Functionality
         if (searchInput) {
-            const newSearchInput = searchInput.cloneNode(true);
-            searchInput.parentNode.replaceChild(newSearchInput, searchInput);
-
-            newSearchInput.addEventListener('input', (e) => {
+            searchInput.addEventListener('input', (e) => {
                 const term = e.target.value.toLowerCase();
                 
                 postItems.forEach(item => {
@@ -162,22 +192,30 @@ const posts = allPosts
             });
         }
 
+        // Button click handlers using event delegation
+        document.addEventListener('click', (e) => {
+            const btnList = e.target.closest('#btn-list');
+            const btnGrid = e.target.closest('#btn-grid');
+
+            if (btnList) {
+                isListView = true;
+                localStorage.setItem('posts-view', 'list');
+                updateView();
+            } else if (btnGrid) {
+                isListView = false;
+                localStorage.setItem('posts-view', 'grid');
+                updateView();
+            }
+        });
+
         // Initialize
         updateView();
-
-        if (toggleBtn) {
-            // Remove old listener
-            const newBtn = toggleBtn.cloneNode(true);
-            toggleBtn.parentNode.replaceChild(newBtn, toggleBtn);
-
-            newBtn.addEventListener('click', () => {
-                isListView = !isListView;
-                localStorage.setItem('posts-view', isListView ? 'list' : 'grid');
-                updateView();
-            });
-        }
     }
 
     document.addEventListener('astro:page-load', setupViewToggle);
-    setupViewToggle();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupViewToggle);
+    } else {
+        setupViewToggle();
+    }
 </script>

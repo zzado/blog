@@ -7,8 +7,8 @@ export const defaultLang = 'ko';
 
 export const ui = {
   ko: {
-    'nav.posts': '포스트',
-    'nav.about': '소개',
+    'nav.posts': 'Posts',
+    'nav.about': 'About',
     'hero.title': '짜도의 개발 블로그',
     'hero.desc': 'Astro 5.0과 Tailwind 4.0으로 만든 개발과 일상 이야기.',
     'hero.button': '블로그 읽기',
