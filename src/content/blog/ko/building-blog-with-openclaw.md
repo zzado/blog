@@ -2,7 +2,7 @@
 title: 'AI와 함께 만드는 나만의 블로그 - OpenClaw + Astro 제작기'
 description: 'OpenClaw와 Claude Opus를 활용해 Astro 블로그를 처음부터 끝까지 구축한 과정을 공유합니다.'
 pubDate: '2026-02-06'
-heroImage: '/blog-placeholder-1.svg'
+heroImage: '/images/astro-openclaw-hero.png'
 tags: ['astro', 'openclaw', 'claude', 'github-pages', 'blog']
 category: 'tech'
 ---

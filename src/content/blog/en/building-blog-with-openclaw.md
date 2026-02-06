@@ -2,7 +2,7 @@
 title: 'Building My Blog with AI - OpenClaw + Astro Journey'
 description: 'A complete walkthrough of building an Astro blog from scratch using OpenClaw and Claude Opus.'
 pubDate: '2026-02-06'
-heroImage: '/blog-placeholder-1.svg'
+heroImage: '/images/astro-openclaw-hero.png'
 tags: ['astro', 'openclaw', 'claude', 'github-pages', 'blog']
 category: 'tech'
 ---

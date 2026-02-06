@@ -2,3 +2,18 @@
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  /* Remove backticks from inline code */
+  .prose :where(code):not(:where(pre *))::before {
+    content: "" !important;
+  }
+  .prose :where(code):not(:where(pre *))::after {
+    content: "" !important;
+  }
+
+  /* Style inline code */
+  .prose :where(code):not(:where(pre *)) {
+    @apply !bg-stone-200 dark:!bg-stone-800 !text-red-600 dark:!text-red-400 !rounded !px-1.5 !py-0.5 !font-mono !text-sm !font-medium;
+  }
+}

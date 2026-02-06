@@ -16,6 +16,9 @@ type Props = CollectionEntry<'blog'>;
 
 const post = Astro.props;
 const { Content, headings } = await post.render();
+
+const { BASE_URL } = import.meta.env;
+const homeUrl = BASE_URL.endsWith('/') ? BASE_URL : BASE_URL + '/';
 ---
 
 <Layout>
@@ -28,9 +31,7 @@ const { Content, headings } = await post.render();
         <div class="lg:flex lg:gap-12 lg:justify-center">
             <!-- Main Content -->
             <article class="flex-1 min-w-0 max-w-4xl">
-                {post.data.heroImage && (
-                    <img width={1020} height={510} src={post.data.heroImage} alt="" class="w-full h-auto rounded-lg shadow-md mb-8" />
-                )}
+                <img width={1020} height={510} src={post.data.heroImage ? `${homeUrl}${post.data.heroImage.replace(/^\//, '')}` : `${homeUrl}blog-placeholder-1.svg`} alt="" class="w-full h-auto rounded-lg shadow-md mb-8" />
                 <div class="prose prose-lg prose-stone dark:prose-invert max-w-none">
                     <div class="mb-8 text-center lg:text-left">
                         <div class="text-sm text-gray-500 dark:text-gray-400 mb-2">
