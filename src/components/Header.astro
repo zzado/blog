@@ -52,8 +52,8 @@ if (currentPath.startsWith('/ko/') || currentPath === '/ko') {
       <!-- Right Side Actions -->
       <div class="flex items-center space-x-2">
         <!-- Language Toggle -->
-        <a href={toggleLangUrl} class="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all font-medium text-sm">
-            {lang === 'ko' ? '🇺🇸 EN' : '🇰🇷 KO'}
+        <a href={toggleLangUrl} class="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all font-medium text-sm flex items-center gap-1">
+            {lang === 'ko' ? '🇰🇷 KO' : '🇺🇸 EN'}
         </a>
 
         <!-- Theme Toggle Button -->
@@ -80,7 +80,7 @@ if (currentPath.startsWith('/ko/') || currentPath === '/ko') {
       <a href={aboutUrl} class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800">{t('nav.about')}</a>
       <!-- Mobile Language Toggle -->
       <a href={toggleLangUrl} class="block px-3 py-2 rounded-md text-base font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800">
-        {lang === 'ko' ? '🇺🇸 Switch to English' : '🇰🇷 한국어로 변경'}
+        {lang === 'ko' ? '🇰🇷 한국어' : '🇺🇸 English'}
       </a>
     </div>
   </div>

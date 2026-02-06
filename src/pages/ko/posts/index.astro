@@ -29,10 +29,10 @@ const posts = allPosts
 
                 <!-- View Toggle Button -->
                 <button id="view-toggle" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none hidden md:block" title="Toggle View">
-                    <!-- Grid Icon (Show when in List View) -->
-                    <svg id="icon-grid" class="hidden w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-                    <!-- List Icon (Show when in Grid View) -->
-                    <svg id="icon-list" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    <!-- Grid Icon (Show when in Grid View) -->
+                    <svg id="icon-grid" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    <!-- List Icon (Show when in List View) -->
+                    <svg id="icon-list" class="hidden w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
             </div>
 		</div>
@@ -41,7 +41,7 @@ const posts = allPosts
 			{
 				posts.map((post) => (
 					<article class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow overflow-hidden group post-item" data-title={post.data.title.toLowerCase()} data-desc={post.data.description.toLowerCase()} data-tags={post.data.tags.join(',').toLowerCase()}>
-						<a href={`${homeUrl}posts/${post.slug.replace(/^ko\//, '')}`} class="block h-full card-link">
+						<a href={`${homeUrl}ko/posts/${post.slug.replace(/^ko\//, '')}`} class="block h-full card-link">
 							{post.data.heroImage && (
 								<img width={720} height={360} src={post.data.heroImage.startsWith('/') ? homeUrl + post.data.heroImage.substring(1) : post.data.heroImage} alt="" class="w-full h-48 object-cover card-image transition-all duration-300" />
 							)}
@@ -112,8 +112,8 @@ const posts = allPosts
                     content.classList.add('flex-1'); // Take remaining space
                 });
 
-                iconGrid.classList.remove('hidden');
-                iconList.classList.add('hidden');
+                iconGrid.classList.add('hidden');
+                iconList.classList.remove('hidden');
             } else {
                 // Grid View Styles
                 container.classList.add('md:grid-cols-2');
@@ -135,8 +135,8 @@ const posts = allPosts
                     content.classList.remove('flex-1');
                 });
                 
-                iconGrid.classList.add('hidden');
-                iconList.classList.remove('hidden');
+                iconGrid.classList.remove('hidden');
+                iconList.classList.add('hidden');
             }
         }
 
