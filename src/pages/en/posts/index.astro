@@ -165,9 +165,11 @@ const posts = allPosts
             });
         }
 
+        // Initialize
         updateView();
 
         if (toggleBtn) {
+            // Remove old listener
             const newBtn = toggleBtn.cloneNode(true);
             toggleBtn.parentNode.replaceChild(newBtn, toggleBtn);
 
