@@ -23,12 +23,12 @@ const posts = allPosts
             <div class="flex items-center gap-4">
                 <!-- Search Input -->
                 <div class="relative">
-                    <input type="text" id="search-input" placeholder={t('posts.search_placeholder')} class="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white" />
+                    <input type="text" id="search-input" placeholder={t('posts.search_placeholder')} class="pl-10 pr-4 py-2 border border-stone-300 dark:border-stone-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-stone-800 dark:text-white" />
                     <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
 
                 <!-- View Toggle Buttons -->
-                <div class="hidden md:flex items-center gap-1 border border-gray-300 dark:border-gray-600 rounded-lg p-1">
+                <div class="hidden md:flex items-center gap-1 border border-stone-300 dark:border-stone-600 rounded-lg p-1">
                     <!-- List Icon Button -->
                     <button id="btn-list" class="p-1.5 rounded transition-colors" title="List View">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
@@ -44,7 +44,7 @@ const posts = allPosts
 		<div id="posts-container" class="grid gap-8 md:grid-cols-2 transition-all duration-300 ease-in-out">
 			{
 				posts.map((post) => (
-					<article class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow overflow-hidden group post-item transition-all duration-300 ease-in-out" data-title={post.data.title.toLowerCase()} data-desc={post.data.description.toLowerCase()} data-tags={post.data.tags.join(',').toLowerCase()}>
+					<article class="bg-white dark:bg-stone-800 rounded-lg shadow-sm border border-stone-200 dark:border-stone-700 hover:shadow-md transition-shadow overflow-hidden group post-item transition-all duration-300 ease-in-out" data-title={post.data.title.toLowerCase()} data-desc={post.data.description.toLowerCase()} data-tags={post.data.tags.join(',').toLowerCase()}>
 						<a href={`${homeUrl}en/posts/${post.slug.replace(/^en\//, '')}`} class="block h-full card-link">
 							{post.data.heroImage && (
 								<img width={720} height={360} src={post.data.heroImage.startsWith('/') ? homeUrl + post.data.heroImage.substring(1) : post.data.heroImage} alt="" class="w-full h-48 object-cover card-image transition-all duration-300" />

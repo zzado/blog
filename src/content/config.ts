@@ -11,6 +11,7 @@ const blog = defineCollection({
 		updatedDate: z.coerce.date().optional(),
 		heroImage: z.string().optional(),
         tags: z.array(z.string()).default([]),
+        category: z.enum(['tech', 'life']).default('tech'),
 	}),
 });
 

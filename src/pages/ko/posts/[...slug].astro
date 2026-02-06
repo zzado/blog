@@ -15,28 +15,113 @@ export async function getStaticPaths() {
 type Props = CollectionEntry<'blog'>;
 
 const post = Astro.props;
-const { Content } = await post.render();
+const { Content, headings } = await post.render();
 ---
 
 <Layout>
-	<article class="max-w-3xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        {post.data.heroImage && (
-            <img width={1020} height={510} src={post.data.heroImage} alt="" class="w-full h-auto rounded-lg shadow-md mb-8" />
-        )}
-        <div class="prose prose-lg dark:prose-invert max-w-none">
-            <div class="mb-8 text-center">
-                <div class="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                    {post.data.pubDate.toLocaleDateString('ko-KR')}
+    <!-- Reading Progress Bar -->
+    <div id="progress-container" class="fixed top-0 left-0 w-full h-1.5 bg-gray-200 dark:bg-gray-700 z-50">
+        <div id="progress-bar" class="h-full bg-blue-600 dark:bg-blue-500 w-0 transition-all duration-100 ease-out"></div>
+    </div>
+
+	<div class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <div class="lg:flex lg:gap-12 lg:justify-center">
+            <!-- Main Content -->
+            <article class="flex-1 min-w-0 max-w-4xl">
+                {post.data.heroImage && (
+                    <img width={1020} height={510} src={post.data.heroImage} alt="" class="w-full h-auto rounded-lg shadow-md mb-8" />
+                )}
+                <div class="prose prose-lg prose-stone dark:prose-invert max-w-none">
+                    <div class="mb-8 text-center lg:text-left">
+                        <div class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                            {post.data.pubDate.toLocaleDateString('ko-KR')}
+                        </div>
+                        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">{post.data.title}</h1>
+                        <div class="flex justify-center lg:justify-start gap-2 mb-4">
+                            {post.data.tags && post.data.tags.map(tag => (
+                                <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded-full">#{tag}</span>
+                            ))}
+                        </div>
+                        <hr class="border-gray-200 dark:border-gray-700" />
+                    </div>
+                    <Content />
                 </div>
-                <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">{post.data.title}</h1>
-                <div class="flex justify-center gap-2 mb-4">
-                    {post.data.tags && post.data.tags.map(tag => (
-                        <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded-full">#{tag}</span>
-                    ))}
+            </article>
+
+            <!-- Table of Contents (Desktop Only) -->
+            <aside class="hidden lg:block w-48 shrink-0">
+                <div class="sticky top-24">
+                    <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider text-sm">목차</h2>
+                    <nav id="toc" class="max-h-[calc(100vh-10rem)] overflow-y-auto pr-4">
+                        <ul class="space-y-2 border-l-2 border-gray-200 dark:border-gray-700">
+                            {headings.map(heading => (
+                                <li class={`toc-item pl-4 ${heading.depth === 3 ? 'ml-4' : ''}`}>
+                                    <a href={`#${heading.slug}`} class="block text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors leading-relaxed line-clamp-2">
+                                        {heading.text}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
                 </div>
-                <hr class="border-gray-200 dark:border-gray-700" />
-            </div>
-            <Content />
+            </aside>
         </div>
-	</article>
+	</div>
 </Layout>
+
+<script>
+    // 1. Reading Progress Bar Logic
+    const progressBar = document.getElementById('progress-bar');
+    
+    function updateProgress() {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (scrollTop / docHeight) * 100;
+        
+        if (progressBar) {
+            progressBar.style.width = scrolled + '%';
+        }
+    }
+
+    window.addEventListener('scroll', updateProgress);
+    window.addEventListener('resize', updateProgress);
+
+
+    // 2. TOC Active Highlighting Logic
+    const observerOptions = {
+        root: null,
+        rootMargin: '-100px 0px -66%', // Highlight when element is near top
+        threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const id = entry.target.getAttribute('id');
+            const tocLink = document.querySelector(`#toc a[href="#${id}"]`);
+
+            if (entry.isIntersecting) {
+                // Remove active class from all links
+                document.querySelectorAll('#toc a').forEach(link => {
+                    link.classList.remove('text-blue-600', 'dark:text-blue-400', 'font-medium', 'border-l-2', 'border-blue-600');
+                    link.closest('li').classList.remove('border-l-2', 'border-blue-600', '-ml-[2px]');
+                });
+
+                // Add active class to current link
+                if (tocLink) {
+                    tocLink.classList.add('text-blue-600', 'dark:text-blue-400', 'font-medium');
+                    // Add border highlight
+                    const li = tocLink.closest('li');
+                    // Reset border style logic (using border-left on UL wrapper, maybe just text color is enough?)
+                    // Let's stick to simple text color change for now to avoid layout shift
+                }
+            }
+        });
+    }, observerOptions);
+
+    // Track all headings
+    document.querySelectorAll('h1, h2, h3').forEach((heading) => {
+        if (heading.id) {
+            observer.observe(heading);
+        }
+    });
+</script>

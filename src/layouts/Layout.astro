@@ -11,7 +11,7 @@ import Footer from '../components/Footer.astro';
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Zzado's Blog</title>
+		<title>zzado.log</title>
         <script is:inline>
             // On page load or when changing themes, best to add inline in `head` to avoid FOUC
             if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -21,7 +21,7 @@ import Footer from '../components/Footer.astro';
             }
         </script>
 	</head>
-	<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 antialiased flex flex-col min-h-screen">
+	<body class="bg-orange-50/30 text-gray-800 dark:bg-stone-950 dark:text-orange-50/90 antialiased flex flex-col min-h-screen transition-colors duration-300">
         <Header />
 		<main class="flex-grow">
             <slot />

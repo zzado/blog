@@ -3,7 +3,7 @@ import Layout from '../../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import { useTranslations } from '../../../i18n/utils';
 
-const lang = 'ko';
+const lang = 'en';
 const t = useTranslations(lang);
 
 const { BASE_URL } = import.meta.env;
@@ -11,20 +11,20 @@ const homeUrl = BASE_URL.endsWith('/') ? BASE_URL : BASE_URL + '/';
 
 const allPosts = await getCollection('blog');
 const posts = allPosts
-    .filter(post => post.id.startsWith('ko/'))
+    .filter(post => post.id.startsWith('en/') && (post.data.category === 'tech' || !post.data.category))
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
 <Layout>
 	<div class="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
 		<div class="flex justify-between items-center mb-8">
-			<h1 class="text-3xl font-bold text-gray-900 dark:text-white">{t('posts.title')}</h1>
+			<h1 class="text-3xl font-bold text-stone-800 dark:text-white">{t('tech.title')}</h1>
             
             <div class="flex items-center gap-4">
                 <!-- Search Input -->
                 <div class="relative">
                     <input type="text" id="search-input" placeholder={t('posts.search_placeholder')} class="pl-10 pr-4 py-2 border border-stone-300 dark:border-stone-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-stone-800 dark:text-white" />
-                    <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <svg class="w-5 h-5 text-stone-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
 
                 <!-- View Toggle Buttons -->
@@ -45,23 +45,23 @@ const posts = allPosts
 			{
 				posts.map((post) => (
 					<article class="bg-white dark:bg-stone-800 rounded-lg shadow-sm border border-stone-200 dark:border-stone-700 hover:shadow-md transition-shadow overflow-hidden group post-item transition-all duration-300 ease-in-out" data-title={post.data.title.toLowerCase()} data-desc={post.data.description.toLowerCase()} data-tags={post.data.tags.join(',').toLowerCase()}>
-						<a href={`${homeUrl}ko/posts/${post.slug.replace(/^ko\//, '')}`} class="block h-full card-link">
+						<a href={`${homeUrl}en/posts/${post.slug.replace(/^en\//, '')}`} class="block h-full card-link">
 							{post.data.heroImage && (
 								<img width={720} height={360} src={post.data.heroImage.startsWith('/') ? homeUrl + post.data.heroImage.substring(1) : post.data.heroImage} alt="" class="w-full h-48 object-cover card-image transition-all duration-300" />
 							)}
 							<div class="p-6 card-content">
-								<h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400">
+								<h2 class="text-xl font-semibold text-stone-800 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400">
 									{post.data.title}
 								</h2>
-								<p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                                    {post.data.pubDate.toLocaleDateString('ko-KR')}
+								<p class="text-sm text-stone-500 dark:text-stone-400 mb-4">
+                                    {post.data.pubDate.toLocaleDateString('en-US')}
 								</p>
-                                <p class="text-gray-600 dark:text-gray-300 line-clamp-3 card-desc mb-4">
+                                <p class="text-stone-600 dark:text-stone-300 line-clamp-3 card-desc mb-4">
                                     {post.data.description}
                                 </p>
                                 <div class="flex flex-wrap gap-2">
                                     {post.data.tags.map(tag => (
-                                        <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded-full cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors post-tag">#{tag}</span>
+                                        <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-stone-600 dark:text-stone-300 text-xs rounded-full cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors post-tag">#{tag}</span>
                                     ))}
                                 </div>
 							</div>
@@ -70,15 +70,15 @@ const posts = allPosts
 				))
 			}
             {posts.length === 0 && (
-                <p class="text-gray-500 dark:text-gray-400 col-span-2 text-center py-10">
+                <p class="text-stone-500 dark:text-stone-400 col-span-2 text-center py-10">
                     {t('posts.empty')}
                 </p>
             )}
             
             <!-- No Search Results Message -->
             <div id="no-results" class="hidden col-span-2 text-center py-10">
-                <p class="text-lg text-gray-500 dark:text-gray-400">검색 결과가 없습니다. 😅</p>
-                <button id="clear-search" class="mt-2 text-blue-500 hover:underline text-sm">검색어 초기화</button>
+                <p class="text-lg text-stone-500 dark:text-stone-400">No results found. 😅</p>
+                <button id="clear-search" class="mt-2 text-blue-500 hover:underline text-sm">Clear search</button>
             </div>
 		</div>
 	</div>
@@ -96,15 +96,17 @@ const posts = allPosts
         let isListView = localStorage.getItem('posts-view') === 'list';
 
         // Active/Inactive styles
-        const activeClass = ['bg-gray-600', 'dark:bg-gray-500', 'text-white'];
-        const inactiveClass = ['text-gray-400', 'dark:text-gray-500', 'hover:bg-gray-100', 'dark:hover:bg-gray-700'];
+        const activeClass = ['bg-amber-600', 'dark:bg-gray-500', 'text-white'];
+        const inactiveClass = ['text-stone-400', 'dark:text-stone-500', 'hover:bg-gray-100', 'dark:hover:bg-gray-700'];
 
         function updateButtonStyles() {
+            // Always get fresh references from DOM
             const btnListEl = document.getElementById('btn-list');
             const btnGridEl = document.getElementById('btn-grid');
             
             if (!btnListEl || !btnGridEl) return;
 
+            // Remove all classes first
             [...activeClass, ...inactiveClass].forEach(cls => {
                 btnListEl.classList.remove(cls);
                 btnGridEl.classList.remove(cls);
@@ -146,6 +148,7 @@ const posts = allPosts
                     content.classList.add('p-3');
                 });
 
+                // Hide description in list view
                 descs.forEach(desc => {
                     desc.classList.add('hidden');
                 });
@@ -169,6 +172,7 @@ const posts = allPosts
                     content.classList.add('p-6');
                 });
 
+                // Show description in grid view
                 descs.forEach(desc => {
                     desc.classList.remove('hidden');
                 });
