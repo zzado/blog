@@ -1,288 +1,246 @@
 ---
-title: 'OpenClaw Installation & Discord Integration Guide'
-description: 'A complete guide to installing the AI agent OpenClaw on a Mac mini and integrating it with Discord.'
-pubDate: '2026-02-07'
-heroImage: '/images/blog/gateway-status.png'
+title: 'OpenClaw Review (1) - Installation & Discord Integration'
+description: 'A step-by-step guide to installing the AI agent platform OpenClaw on a Mac mini and connecting it to Discord via the onboarding wizard.'
+pubDate: '2026-02-08'
+heroImage: '/images/blog/onboard-wizard.png'
 tags: ['openclaw', 'discord', 'mac-mini', 'ai-agent', 'setup']
 category: 'tech'
 ---
 
 ## TL;DR
 
-> I wanted to run the trending AI agent **OpenClaw** 24/7 at home, so I bought a Mac mini. Got it for around $500 with student discount! Here's the complete process from installation to Discord integration.
+> Installed **OpenClaw**, a self-hosted AI agent platform, on a Mac mini and connected it to Discord. Thanks to the onboarding wizard, the whole process was surprisingly smooth!
 
 ---
 
-## Why Mac mini?
+## Background
 
-OpenClaw is a local AI agent gateway. The idea of having an always-on AI that I can message anytime was appealing.
+I wanted more than just chatting with AI on a website. I wanted to **summon AI right from my messenger** — reading files, writing code, making Git commits, all on command. That's exactly what [OpenClaw](https://docs.openclaw.ai/) does.
 
-I needed a machine to run as a server, and after some consideration, I chose the **Mac mini**.
+OpenClaw is a self-hosted gateway that connects messaging apps like WhatsApp, Telegram, Discord, and iMessage to AI agents. Since it runs on your own machine, your data stays with you and customization is unlimited.
 
-### Why I Chose It
-
-- **Low power**: Minimal electricity cost even when running 24/7
-- **macOS**: OpenClaw runs most stable on macOS
-- **Compact**: Perfect size for a corner of my desk
-- **Student discount**: About 10% off at the Education Store!
-
-### Purchase Info
-
-| Item | Details |
-|------|---------|
-| Model | Mac mini (M4) |
-| Price | **~$500** (with student discount) |
-| Shipping | Arrived in **2 days** |
-
-> 💡 If you're a student or educator, you can get a discount at the [Apple Education Store](https://www.apple.com/us-hed/shop)!
+I needed a machine that could run 24/7, so I picked up a **Mac mini** (M4) — got it for around $550 with a student discount! Low power consumption, compact size, and macOS being the most stable platform for OpenClaw made it a perfect fit.
 
 ---
 
-## Step 1: Prerequisites
+## Process
 
-### AI Model Subscription
+### Step 1: Prerequisites
 
-To use OpenClaw, you need access to an AI model. Here are some options:
+You need two things to run OpenClaw:
 
-**1. Claude Pro / Claude Code Subscription (Recommended)**
-- [Claude Pro](https://claude.ai/pro) - $20/month, for general users
-- [Claude Code](https://claude.ai/code) - $100/month, for developers (includes API credits)
+- **Node.js 22 or later**
+- **AI model access** (Anthropic API key or Claude subscription)
 
-**2. Google AI Pro Subscription**
-- [Google AI Pro](https://ai.google/) - Access to Gemini models
+```bash
+node --version
+# v22.x.x or higher
+```
 
-**3. Anthropic API Key**
-- Get an API key from [Anthropic Console](https://console.anthropic.com/)
-- Pay-as-you-go pricing
+![Node.js version check](/blog/images/blog/node-version.png)
 
-> 💡 I'm using **Google AI Pro** and **Claude Pro** subscriptions. With a subscription plan, you can use OpenClaw without a separate API key!
+AI model options include:
 
----
+- **[Claude Code](https://claude.ai/code)** — $100/mo, for developers (includes API credits, recommended)
+- **[Claude Pro](https://claude.ai/pro)** — $20/mo, for general users
+- **[Anthropic API](https://console.anthropic.com/)** — Pay-as-you-go
 
-## Step 2: Installing OpenClaw
+### Step 2: Install OpenClaw
 
-### Run the Install Script
-
-The easiest way is to use the official install script.
+One line does it all:
 
 ```bash
 curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
-Once installed, you can use the `openclaw` command.
+Verify the installation:
 
 ```bash
 openclaw --version
 ```
 
-![OpenClaw Version Check](/blog/images/blog/openclaw-version.png)
+![OpenClaw version check](/blog/images/blog/openclaw-version.png)
 
-### Run the Onboarding Wizard
+### Step 3: Onboarding Wizard
 
-The onboarding wizard helps with initial setup.
+This is the key part. The `openclaw onboard` command walks you through all initial setup interactively.
 
 ```bash
 openclaw onboard --install-daemon
 ```
 
-![Onboarding Start - Security Warning](/blog/images/blog/onboard-wizard.png)
+![Onboarding wizard start](/blog/images/blog/onboard-wizard.png)
 
-First, you'll see a security warning. AI agents are powerful tools, so use them carefully. Select `Yes` to proceed.
+First, you'll see a **security warning**. AI agents can read files and execute commands, so it reminds you to be cautious. Select `Yes` if you understand the implications.
 
-![Onboarding Settings](/blog/images/blog/onboard-flow.png)
+The wizard then guides you through each step:
 
-The wizard asks about:
-
-1. **Onboarding mode**: QuickStart or Advanced
-2. **Config handling**: Use existing / Update / Reset
-3. **Model setup**: Choose your AI model (Claude, Gemini, etc.)
-4. **Channel setup**: Select messaging apps to connect
-5. **Daemon install**: Auto-start on system boot
-
-### Access the Web Dashboard
-
-After installation, the web dashboard opens automatically!
+#### Choosing Onboarding Mode
 
 ```bash
-openclaw dashboard
+# Select onboarding mode
+◇ Onboarding mode
+→ QuickStart          # Recommended for first-timers!
+
+# QuickStart default settings summary
+┌ QuickStart ─────────────────────────╮
+│                                      │
+│  Gateway port:  18789                │
+│  Gateway bind:  Loopback (127.0.0.1) │
+│  Gateway auth:  Token (default)      │
+│  Tailscale:     Off                  │
+│  Direct to chat channels.            │
+│                                      │
+└──────────────────────────────────────╯
 ```
 
-> 🎉 **From here, you can configure everything via chat!**
-> 
-> Once the model is connected, you can continue setup by chatting with AI in the web dashboard. Just say "Set up Discord integration" and it'll guide you!
+The Gateway runs locally on port 18789 with no external exposure — safe by default.
 
-### Check Gateway Status
+#### AI Model Setup
+
+```bash
+# Select AI model provider
+◇ Model/auth provider
+→ Anthropic
+
+# Select auth method
+◇ Anthropic auth method
+→ Anthropic token (paste setup-token)
+
+# Paste your setup-token
+◇ Paste Anthropic setup-token
+→ ****************************************
+```
+
+Select Anthropic, then paste the token generated by `claude setup-token`. I'm using **Claude Opus 4** as my default model.
+
+#### Channel Selection — Discord!
+
+```bash
+# Select channel to connect
+◇ Select channel (QuickStart)
+→ Discord (Bot API)
+```
+
+![Onboarding channel setup](/blog/images/blog/onboard-flow.png)
+
+Select **Discord** as your channel. The wizard handles the bot token input right there.
+
+### Step 4: Create a Discord Bot
+
+Create your Discord bot at the [Discord Developer Portal](https://discord.com/developers/applications).
+
+**Steps:**
+
+1. **New Application** → Enter app name (e.g., "OpenClaw Bot") → **Create**
+2. Left menu **Bot** → **Reset Token** → Copy the token
+3. Under **Privileged Gateway Intents**:
+   - ✅ **Message Content Intent** — **Required!** Without this, the bot can't read messages
+   - ✅ **Server Members Intent** — Recommended (needed for user name lookups)
+4. **OAuth2 → URL Generator**:
+   - Scopes: `bot`, `applications.commands`
+   - Bot Permissions: `View Channels`, `Send Messages`, `Read Message History`, `Embed Links`, `Attach Files`, `Add Reactions`
+5. Use the generated URL to invite the bot to your server
+
+> ⚠️ Forgetting **Message Content Intent** will cause a `Used disallowed intents` error. Don't skip it!
+
+### Step 5: Connect Discord to OpenClaw
+
+Enter the bot token directly in the onboarding wizard:
+
+```bash
+# Enter Discord bot token
+◇ Enter Discord bot token
+→ ****************************************
+
+# Configure channel access
+◇ Configure Discord channels access?
+→ Yes
+
+# Select access mode
+◇ Discord channels access
+→ Allowlist (recommended)
+
+# Enter allowed channels
+◇ Discord channels allowlist (comma-separated)
+→ Server/#Channel1, Server/#Channel2
+
+# Channels resolved
+┌ Discord channels ────────────────────────────╮
+│                                               │
+│  Resolved channels: #channel1, #channel2      │
+│                                               │
+└───────────────────────────────────────────────╯
+```
+
+**Allowlist** mode is recommended. It explicitly specifies which channels the bot responds in, preventing unwanted responses.
+
+Once configured, the wizard automatically installs and starts the Gateway service:
+
+```bash
+# Gateway service installation
+◓ Installing Gateway service…..
+✓ Installed LaunchAgent: ~/Library/LaunchAgents/ai.openclaw.gateway.plist
+
+# Status check
+◇ Discord: ok (@Claw) (794ms)
+  Agents: main (default)
+  Heartbeat interval: 1h (main)
+```
+
+On macOS, it registers as a **LaunchAgent** for auto-start on boot!
+
+### Step 6: Verify & Test
+
+Check Gateway status:
 
 ```bash
 openclaw gateway status
 ```
 
-![Gateway Status](/blog/images/blog/gateway-status.png)
+![Gateway status check](/blog/images/blog/gateway-status.png)
 
-If you see `running`, you're good! 🎉
+If you see `running`, you're good to go! 🎉
 
----
-
-## Step 3: Create a Discord Bot
-
-### Access Discord Developer Portal
-
-Go to the [Discord Developer Portal](https://discord.com/developers/applications).
-
-### Create a New Application
-
-1. Click **New Application**
-2. Enter app name (e.g., "OpenClaw Bot")
-3. Click **Create**
-
-### Bot Settings
-
-1. Click **Bot** in the left menu
-2. **Reset Token** → Copy the token (you'll need it later!)
-3. In **Privileged Gateway Intents**:
-   - ✅ **Message Content Intent** - Required!
-   - ✅ **Server Members Intent** - Recommended
-
-> ⚠️ If you don't enable **Message Content Intent**, the bot can't read messages!
-
-### Generate OAuth2 URL
-
-1. Click **OAuth2 → URL Generator** in the left menu
-2. Select **Scopes**:
-   - ✅ bot
-   - ✅ applications.commands
-3. Select **Bot Permissions**:
-   - ✅ View Channels
-   - ✅ Send Messages
-   - ✅ Read Message History
-   - ✅ Embed Links
-   - ✅ Attach Files
-   - ✅ Add Reactions
-
-4. Copy the generated URL at the bottom
-
-### Invite the Bot to Your Server
-
-Paste the URL in your browser and select the server to invite the bot to.
-
----
-
-## Step 4: Connect Discord to OpenClaw
-
-### Configure via Dashboard
-
-No need to manually edit config files! Just ask in the web dashboard chat.
-
-```
-Set up Discord integration. My bot token is [YOUR_BOT_TOKEN].
-```
-
-OpenClaw will automatically:
-1. Enable Discord channel
-2. Set the bot token
-3. Configure permissions
-4. Restart the Gateway
-
-All done! 🎉
-
-### (Optional) Manual Configuration
-
-If you prefer manual setup, edit `~/.openclaw/openclaw.json`:
-
-```json
-{
-  "channels": {
-    "discord": {
-      "enabled": true,
-      "token": "YOUR_BOT_TOKEN",
-      "dm": {
-        "enabled": true,
-        "policy": "pairing"
-      },
-      "guilds": {
-        "*": {
-          "requireMention": true
-        }
-      }
-    }
-  }
-}
-```
-
-> 💡 You can check current settings by asking "Show me the current Discord config" in the dashboard.
-
----
-
-## Step 5: Testing
-
-### DM Test
-
-Send a DM to the bot on Discord. You'll receive a pairing code.
-
-```
-Hello!
-```
-
-Approve the pairing in terminal:
+Open the web dashboard:
 
 ```bash
-openclaw pairing approve discord <user_id>
+openclaw dashboard
 ```
 
-After approval, send another message and the bot will respond! 🎉
+Navigate to `http://127.0.0.1:18789/` to access the Control UI, where you can chat with the AI directly.
 
-### Server Channel Test
-
-Mention the bot in a server channel to get a response.
+Now try mentioning the bot in Discord:
 
 ```
-@OpenClaw Hello?
+@OpenClaw Hello!
+```
+
+If the bot responds, the integration is complete! You can also DM the bot, though first-time contact requires **pairing authentication**:
+
+```bash
+openclaw pairing approve discord <code>
 ```
 
 ---
 
-## Troubleshooting
+## Result
 
-### Bot Not Responding
+My Mac mini now runs OpenClaw 24/7, and I can summon AI anytime from Discord. File reading, code writing, Git commits, web searches — all from a chat window.
 
-1. **Check Gateway status**
-   ```bash
-   openclaw gateway status
-   ```
-
-2. **Check logs**
-   ```bash
-   openclaw gateway logs
-   ```
-
-3. **Verify Message Content Intent**
-   - Double-check it's enabled in Discord Developer Portal
-
-4. **Check channel permissions**
-   - Make sure the bot has read/write permissions
-
-### "Used disallowed intents" Error
-
-→ **Message Content Intent** is not enabled in Discord Developer Portal. Enable it and restart the Gateway.
+What impressed me most was the **onboarding wizard's polish**. A few selections in the terminal and security setup, model connection, channel integration, and service registration are all done at once. Almost no need to manually edit JSON config files.
 
 ---
 
-## Wrap Up
+## Wrapping Up
 
-Now you can summon your AI agent anytime on Discord! 🦞
+OpenClaw turns the dream of "an AI assistant in my pocket" into reality. Self-hosted means you keep data sovereignty, and being open source (MIT) means unlimited customization.
 
-### Next Steps
-
-- **More channel integrations**: WhatsApp, Telegram, iMessage, etc.
-- **Custom skills**: Build your own features
-- **Multi-agent**: Run multiple AI agents
+In the next post, I'll share how I **built this very blog** with OpenClaw — pair programming with AI to create an Astro blog from scratch!
 
 ### References
 
-- [OpenClaw Documentation](https://docs.openclaw.ai/)
+- [OpenClaw Official Docs](https://docs.openclaw.ai/)
 - [OpenClaw GitHub](https://github.com/openclaw/openclaw)
 - [Discord Developer Portal](https://discord.com/developers/applications)
-
----
-
-> 💬 Questions or feedback? Leave a comment!
+- [OpenClaw Discord Community](https://discord.com/invite/clawd)
