@@ -2,7 +2,7 @@
 title: 'How to Get $50 Free Credit for Claude Opus 4.6 Launch'
 description: 'Anthropic is offering $50 in free credits to Pro/Max subscribers to celebrate the Claude Opus 4.6 launch. Here is everything you need to know about eligibility, activation, and important caveats.'
 pubDate: '2026-02-12'
-heroImage: '/blog/images/blog/claude-opus-4-6-hero.png'
+heroImage: '/images/blog/claude-opus-4-6-hero.png'
 tags: ['claude', 'anthropic', 'ai', 'opus', 'free-credit']
 category: 'tech'
 ---

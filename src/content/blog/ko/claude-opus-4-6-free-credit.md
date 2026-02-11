@@ -2,7 +2,7 @@
 title: 'Claude Opus 4.6 출시 기념 $50 무료 크레딧 받는 법'
 description: 'Anthropic이 Claude Opus 4.6 출시를 기념해 Pro/Max 구독자에게 $50 무료 크레딧을 제공합니다. 대상 확인부터 활성화 방법, 주의사항까지 정리했습니다.'
 pubDate: '2026-02-12'
-heroImage: '/blog/images/blog/claude-opus-4-6-hero.png'
+heroImage: '/images/blog/claude-opus-4-6-hero.png'
 tags: ['claude', 'anthropic', 'ai', 'opus', 'free-credit']
 category: 'tech'
 ---
