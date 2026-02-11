@@ -56,10 +56,6 @@ Team, Enterprise plans, and API users are **not** eligible.
 
 There are a few things to watch out for with this promotion.
 
-### Web Only
-
-The $50 credit works **only on claude.ai web**. It does not apply to the mobile app.
-
 ### Auto-Billing Warning
 
 This is the most important caveat. Once Extra Usage is enabled, **billing continues automatically after the $50 credit is depleted**. To avoid unexpected charges:
